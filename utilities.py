@@ -126,6 +126,7 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
 
             # Iterate over data.
             for inputs, labels in dataloaders[phase]:
+                print(inputs)
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
