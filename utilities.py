@@ -124,11 +124,11 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
             running_corrects = 0
             print(len(dataloaders[phase]))
 
+
             # Iterate over data.
-            for inputs, labels in dataloaders[phase]:
-                print(inputs)
-                inputs = inputs.to(device)
-                labels = labels.to(device)
+            for samples in dataloaders[phase]:
+                inputs = samples['image'].to(device)
+                labels = samples['classification'].to(device)
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
