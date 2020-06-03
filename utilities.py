@@ -9,6 +9,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 import time
 import copy
+from tqdm import tqdm
 
 # Ignore warnings
 import warnings
@@ -127,7 +128,7 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
             running_corrects = 0
 
             # Iterate over data.
-            for samples in dataloaders[phase]:
+            for samples in tqdm(dataloaders[phase]):
                 inputs = (samples['image'])
                 classification = (samples['classification'])
                 inputs = inputs.to(device)
