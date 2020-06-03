@@ -3,6 +3,8 @@ import os
 import time
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+import matplotlib.pyplot as plt
 
 
 train = tf.keras.preprocessing.image_dataset_from_directory(
@@ -11,7 +13,7 @@ train = tf.keras.preprocessing.image_dataset_from_directory(
     label_mode="int",
     class_names=None,
     color_mode="rgb",
-    batch_size=32,
+    batch_size=128,
     image_size=(256, 256),
     shuffle=True,
     seed=10,
@@ -26,7 +28,7 @@ val = tf.keras.preprocessing.image_dataset_from_directory(
     label_mode="int",
     class_names=None,
     color_mode="rgb",
-    batch_size=32,
+    batch_size=128,
     image_size=(256, 256),
     shuffle=True,
     seed=10,
@@ -51,8 +53,29 @@ x = keras.layers.GlobalAveragePooling2D()(x)
 outputs = keras.layers.Dense(1)(x)
 model = keras.Model(inputs, outputs)
 
+callbacks = [EarlyStopping(monitor='val_loss', patience=2),
+             ModelCheckpoint(filepath='best_model.h5', monitor='val_loss', save_best_only=True)]
+
 model.compile(optimizer=keras.optimizers.Adam(),
               loss=keras.losses.BinaryCrossentropy(from_logits=True),
-              metrics=[keras.metrics.BinaryAccuracy()])
-model.fit(train, epochs=5, validation_data=val, verbose=1)
+              metrics=[keras.metrics.BinaryAccuracy(), keras.metrics.AUC()])
+history = model.fit(train, epochs=0, validation_data=val, verbose=1, callbacks=callbacks)
+
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper left')
+plt.show()
+plt.savefig('accuracy.png')
+
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper left')
+plt.show()
+plt.savefig('loss.png')
 
