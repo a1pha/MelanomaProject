@@ -28,8 +28,8 @@ if __name__ == '__main__':
                                                    ToTensor()
                                                ]))
 
-    val_count = int(len(transformed_dataset)*test_split)*batch_size
-    train_count = int(len(transformed_dataset)-val_count)*batch_size
+    val_count = int(len(transformed_dataset)*test_split)
+    train_count = int(len(transformed_dataset)-val_count)
 
     train_set, val_set = torch.utils.data.random_split(transformed_dataset, [train_count, val_count])
 
