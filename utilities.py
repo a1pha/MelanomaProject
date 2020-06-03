@@ -98,8 +98,11 @@ class ToTensor(object):
         # numpy image: H x W x C
         # torch image: C X H X W
         image = image.transpose((2, 0, 1))
-        return {'image': torch.from_numpy(image),
-                'classification': torch.from_numpy(classification)}
+        image, classification = torch.from_numpy(image), torch.from_numpy(classification)
+        image = image.float()
+        classification = classification.float()
+
+        return {'image': image, 'classification': classification}
 
 
 
@@ -122,14 +125,13 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
 
             running_loss = 0.0
             running_corrects = 0
-            print(len(dataloaders[phase]))
-
 
             # Iterate over data.
             for samples in dataloaders[phase]:
-                inputs = samples['image'].to(device)
-                labels = samples['classification'].to(device)
-
+                inputs = (samples['image'])
+                classification = (samples['classification'])
+                inputs = inputs.to(device)
+                labels = classification.to(device)
                 # zero the parameter gradients
                 optimizer.zero_grad()
 
@@ -162,7 +164,6 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
 
-        print()
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(

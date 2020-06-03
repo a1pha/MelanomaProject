@@ -21,11 +21,6 @@ class_names = ['melanoma']
 if __name__ == '__main__':
     freeze_support()
 
-    csv_file = 'data/ISIC_2019_Training_GroundTruth.csv'
-    df = pd.read_csv(csv_file)
-
-
-
     transformed_dataset = MelanomaDataset(csv_file='data/ISIC_2019_Training_GroundTruth.csv',
                                                root_dir='data/ISIC_2019_Training_Input/',
                                                transform=transforms.Compose([
@@ -59,7 +54,7 @@ if __name__ == '__main__':
 
     model_ft = model_ft.to(device)
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.BCEWithLogitsLoss()
 
     # Observe that all parameters are being optimized
     optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
