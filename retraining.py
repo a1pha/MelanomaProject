@@ -15,7 +15,7 @@ from multiprocessing import freeze_support
 
 # Parameters
 test_split = 0.2
-batch_size = 1
+batch_size = 16
 class_names = ['melanoma']
 
 if __name__ == '__main__':
