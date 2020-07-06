@@ -1,5 +1,9 @@
+
 data/
 .DS_Store
 .idea/
 __pycache__/
 smaller_dataset/
+models/
+innvestigate/
+.ipynb_checkpoints/
